@@ -332,3 +332,22 @@ document.getElementById('tbody').innerHTML=table;
 
 //clean data
 
+
+
+function checkOrientation() {
+  const overlay = document.getElementById('rotateOverlay');
+  if (window.innerWidth < 769 && window.innerHeight > window.innerWidth) {
+    // جوال + رأسي
+    overlay.style.display = 'flex';
+  } else {
+    // أفقي أو ديسكتوب
+    overlay.style.display = 'none';
+  }
+}
+
+// تحقق أول ما تحمل الصفحة
+window.addEventListener('load', checkOrientation);
+// تحقق كل ما تغيرت الشاشة (Rotate / Resize)
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', checkOrientation);
+
