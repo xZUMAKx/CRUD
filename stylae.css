@@ -150,72 +150,36 @@ padding: 5px;
 
 }
 
-/* --- Media Queries For Better Responsiveness --- */
 
-/* للشاشات المتوسطة (Tablets) */
-@media (max-width: 992px) {
-    .crud {
-        width: 90%; /* تكبير الحاوية قليلاً */
-    }
-    .price input {
-        width: 18%; /* موازنة حقول السعر */
-    }
+.rotate-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  color: #fff;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  text-align: center;
 }
 
-/* للشاشات الصغيرة (Mobile Phones) */
-@media (max-width: 600px) {
-    .head h1 {
-        font-size: 2rem;
-    }
-    
-    /* جعل حقول السعر تأخذ مساحة أكبر في الجوال لسهولة الكتابة */
-    .price {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        justify-content: space-between;
-    }
-
-    .price input {
-        width: 48% !important; /* كل حقلين بجانب بعض */
-        margin-bottom: 5px;
-    }
-
-    #total {
-        width: 100%; /* جعل التوتال سطر كامل ليكون واضحاً */
-        text-align: center;
-        display: block;
-    }
-
-    /* أهم جزء: جعل الجدول يمرر يميناً ويساراً ولا يكسر التصميم */
-    .table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
-    button {
-        height: 40px; /* تكبير الأزرار قليلاً لتناسب اللمس بالإصبع */
-        font-size: 14px;
-    }
-
-    .btnsearch {
-        flex-direction: column; /* جعل أزرار البحث تحت بعضها في الجوال */
-        gap: 10px;
-    }
-
-    .btnsearch button {
-        width: 100%;
-    }
-
-    input:focus {
-        transform: scale(1.02); /* تقليل التكبير في الجوال لمنع خروج الحقل عن الشاشة */
-    }
+.rotate-box h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
-/* للشاشات الصغيرة جداً */
-@media (max-width: 350px) {
-    .price input {
-        width: 100% !important; /* كل حقل في سطر منفصل */
-    }
+.rotate-box p {
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .rotate-overlay {
+    display: flex;
+  }
+
+  body {
+    overflow: hidden;
+  }
 }
