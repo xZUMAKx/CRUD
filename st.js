@@ -36,74 +36,33 @@
 
 
 let title=document.getElementById('input');
-
 let price=document.getElementById('price');
-
 let taxes=document.getElementById('taxes');
-
 let ads=document.getElementById('ads');
-
 let discount=document.getElementById('discount');
-
 let total=document.getElementById('total');
-
 let count=document.getElementById('count');
-
 let category=document.getElementById('category');
-
 let creat=document.getElementById('creat');
 
 let mood='creat';
 let tmp;
-//get total
+let datapro = localStorage.product ? JSON.parse(localStorage.product) : [];
 
+// حساب المجموع
 function getTotal(){
-
-
-if(price.value !=''){
-
-let result=(+price.value + +taxes.value + +ads.value)
-- +discount.value;
-
-total. innerHTML= result;
-total.style.background='green';
-
-}
-else{
-
-total.style.background='red';
-total.innerHTML=0;
-}
+    if(price.value !=''){
+        let result=(+price.value + +taxes.value + +ads.value) - +discount.value;
+        total.innerHTML= result;
+        total.style.background='green';
+    } else {
+        total.style.background='red';
+        total.innerHTML=0;
+    }
 }
 
-//creat
-
-let datapro;
-
-if(localStorage.product !=null)
-{
-
-
-datapro = JSON.parse(localStorage.product);
-
-
-}else{
-
-
-datapro=[];
-
-
-}
-
-
-
-
-
-
-
-
+// إنشاء / تعديل منتج
 creat.onclick = function () {
-
     let newpro = {
         title: title.value.toLowerCase(),
         price: price.value,
@@ -114,103 +73,63 @@ creat.onclick = function () {
         count: count.value,
         category: category.value.toLowerCase(),
     }
-if(title.value !=''&&price.value !=''&&category.value!=''
-    &&newpro.count <101
-){
+    if(title.value !='' && price.value !='' && category.value !='' && newpro.count <101){
         if (mood === 'creat') {
-
-        if (newpro.count > 1) {
-            for (let i = 0; i < newpro.count; i++) {
-                datapro.push(newpro );
+            if (newpro.count > 1) {
+                for (let i = 0; i < newpro.count; i++) {
+                    datapro.push(newpro);
+                }
+            } else {
+                datapro.push(newpro);
             }
         } else {
-            datapro.push(newpro);
-        }
-
-    } else {
-        datapro[tmp] = newpro;
-        mood = 'creat';
-        creat.innerHTML = 'Create';
-        count.style.display='block';
-    }  
-      cleardata();
-}
-
-
-    //save local
+            datapro[tmp] = newpro;
+            mood = 'creat';
+            creat.innerHTML = 'Create';
+            count.style.display='block';
+        }  
+        cleardata();
+    }
     localStorage.setItem('product', JSON.stringify(datapro));
-    console.log(datapro);
-
     showdata();
 }
 
-
-
-//clear input
-
+// تنظيف البيانات
 function cleardata(){
-title.value='';
-price.value='';
-taxes.value='';
-ads.value='';
-discount.value='';
-count.value='';
-category.value='';
-total.innerHTML='';
-
-
+    title.value=''; price.value=''; taxes.value=''; ads.value='';
+    discount.value=''; count.value=''; category.value=''; total.innerHTML='';
 }
 
-//read
-
-
+// عرض البيانات
 function showdata(){
-
-let table='';
-for(let i=0 ; i<datapro.length ; i++){
-
-
-table+=`
+    let table='';
+    for(let i=0 ; i<datapro.length ; i++){
+        table+=`
 <tr>
-        <td >${i+1}</td>
-        <td>${datapro[i].title}</td>
-        <td>${datapro[i].price}</td>
-        <td>${datapro[i].taxes}</td>
-        <td>${datapro[i].ads}</td>
-        <td>${datapro[i].discount}</td>
-        <td>${datapro[i].total}</td>
-        <td>${datapro[i].category}</td>
-        <td><button onclick="update(${i})" id="update">update</button></td>
-        <td><button onclick="deletedata(${i})" id="delete">delete</button></td>
-</tr>
-
-`
-
+    <td>${i+1}</td>
+    <td>${datapro[i].title}</td>
+    <td>${datapro[i].price}</td>
+    <td>${datapro[i].taxes}</td>
+    <td>${datapro[i].ads}</td>
+    <td>${datapro[i].discount}</td>
+    <td>${datapro[i].total}</td>
+    <td>${datapro[i].category}</td>
+    <td><button onclick="update(${i})" id="update">update</button></td>
+    <td><button onclick="deletedata(${i})" id="delete">delete</button></td>
+</tr>`;
+    }
+    document.getElementById('tbody').innerHTML=table;
+    let btndelete=document.getElementById('deleteall');
+    if(datapro.length>0){
+        btndelete.innerHTML=`<button onclick="deleteall()" id="deleteall">Delete All (${datapro.length})</button>`;
+    } else btndelete.innerHTML='';
 }
 
-document.getElementById('tbody').innerHTML=table;
-let btndelete=document.getElementById('deleteall');
-if(datapro.length>0){
-btndelete.innerHTML=`
-<button onclick="deleteall()" id="deleteall">Delete All (${datapro.length})</button>
-`
-}else{
-
-    btndelete.innerHTML='';
-}
-}
-
-
-
-//delete
-
+// حذف
 function deletedata(i){
-
-datapro.splice(i,1);
-localStorage.product=JSON.stringify(datapro);
-showdata();
-
-
+    datapro.splice(i,1);
+    localStorage.product=JSON.stringify(datapro);
+    showdata();
 }
 
 function deleteall(){
@@ -219,135 +138,79 @@ function deleteall(){
     showdata();
 }
 
-
-
-//update
-
-
+// تعديل
 function update(i){
-
-title.value = datapro[i].title;
-price.value= datapro[i].price;
-taxes.value= datapro[i].taxes;
-ads.value= datapro[i].ads;
-discount.value= datapro[i].discount;
-getTotal();
-count.style.display='none';
-category.value= datapro[i].category;
-creat.innerHTML='update';
-mood='update';
-tmp=i;
-
-scroll({
-    top:0,
-    behavior:"smooth"
-})
+    title.value = datapro[i].title;
+    price.value= datapro[i].price;
+    taxes.value= datapro[i].taxes;
+    ads.value= datapro[i].ads;
+    discount.value= datapro[i].discount;
+    getTotal();
+    count.style.display='none';
+    category.value= datapro[i].category;
+    creat.innerHTML='update';
+    mood='update';
+    tmp=i;
+    scroll({top:0, behavior:"smooth"});
 }
 
-
-//search
-
+// بحث
 let searchmood='title';
-
-function getsearchmood(id)
-{
-let search =document.getElementById('search');
+function getsearchmood(id){
+    let search =document.getElementById('search');
     if(id=='searchtitle'){
-
-
- searchmood='title';
-search.placeholder='search by title'
-    }else{
-        
- searchmood='category';
-search.placeholder='search by category'
+        searchmood='title';
+        search.placeholder='search by title'
+    } else {
+        searchmood='category';
+        search.placeholder='search by category'
     }
-
-search.focus()
-search.value='';
-showdata()
+    search.focus()
+    search.value='';
+    showdata()
 }
 
-function searchdata(value)
-{
+function searchdata(value){
     let table='';
-if(searchmood=='title'){
-
-for(let i=0 ; i<datapro.length ; i++){
-    if(datapro[i].title.includes(value.toLowerCase())){
-       
-
-table+=`
+    for(let i=0 ; i<datapro.length ; i++){
+        if((searchmood=='title' && datapro[i].title.includes(value.toLowerCase())) ||
+           (searchmood=='category' && datapro[i].category.includes(value.toLowerCase()))){
+            table+=`
 <tr>
-        <td>${i}</td>
-        <td>${datapro[i].title}</td>
-        <td>${datapro[i].price}</td>
-        <td>${datapro[i].taxes}</td>
-        <td>${datapro[i].ads}</td>
-        <td>${datapro[i].discount}</td>
-        <td>${datapro[i].total}</td>
-        <td>${datapro[i].category}</td>
-        <td><button onclick="update(${i})" id="update">update</button></td>
-        <td><button onclick="deletedata(${i})" id="delete">delete</button></td>
-</tr>
-
-`
-
+    <td>${i+1}</td>
+    <td>${datapro[i].title}</td>
+    <td>${datapro[i].price}</td>
+    <td>${datapro[i].taxes}</td>
+    <td>${datapro[i].ads}</td>
+    <td>${datapro[i].discount}</td>
+    <td>${datapro[i].total}</td>
+    <td>${datapro[i].category}</td>
+    <td><button onclick="update(${i})" id="update">update</button></td>
+    <td><button onclick="deletedata(${i})" id="delete">delete</button></td>
+</tr>`;
+        }
     }
+    document.getElementById('tbody').innerHTML=table;
 }
 
-}
+// ضبط التكبير / تصغير الصفحة عند التحميل
+window.addEventListener('load', () => {
+    document.body.style.zoom = "1";
+    document.body.style.transform = "scale(1)"; 
+    document.body.style.transformOrigin = "0 0";
+    window.scrollTo(0, 0);
+});
 
-
-
-else{
-for(let i=0 ; i<datapro.length ; i++){
-    if(datapro[i].category.includes(value.toLowerCase())){
-       
-
-table+=`
-<tr>
-        <td>${i}</td>
-        <td>${datapro[i].title}</td>
-        <td>${datapro[i].price}</td>
-        <td>${datapro[i].taxes}</td>
-        <td>${datapro[i].ads}</td>
-        <td>${datapro[i].discount}</td>
-        <td>${datapro[i].total}</td>
-        <td>${datapro[i].category}</td>
-        <td><button onclick="update(${i})" id="update">update</button></td>
-        <td><button onclick="deletedata(${i})" id="delete">delete</button></td>
-</tr>
-
-`
-
-    }
-
-}
-
-}
-document.getElementById('tbody').innerHTML=table;
-}
-
-
-//clean data
-
-
-
+// Overlay عند الدوران للجوال
 function checkOrientation() {
-  const overlay = document.getElementById('rotateOverlay');
-  if (window.innerWidth < 769 && window.innerHeight > window.innerWidth) {
-    // جوال + رأسي
-    overlay.style.display = 'flex';
-  } else {
-    // أفقي أو ديسكتوب
-    overlay.style.display = 'none';
-  }
+    const overlay = document.getElementById('rotateOverlay');
+    if (window.innerWidth < 769 && window.innerHeight > window.innerWidth) {
+        overlay.style.display = 'flex';
+    } else {
+        overlay.style.display = 'none';
+    }
 }
 
-// تحقق أول ما تحمل الصفحة
 window.addEventListener('load', checkOrientation);
-// تحقق كل ما تغيرت الشاشة (Rotate / Resize)
 window.addEventListener('resize', checkOrientation);
 window.addEventListener('orientationchange', checkOrientation);
-
